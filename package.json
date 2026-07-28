@@ -1,0 +1,16 @@
+{
+  "name": "lor-server",
+  "version": "1.0.0",
+  "description": "Server for ENT doctor appointment site",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mongoose": "^8.12.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
+  }
+}
