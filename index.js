@@ -9,7 +9,7 @@ const { initDB, getAllAppointments, createAppointment, updateAppointment, delete
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
 
 // Build allowed CORS origins — env var takes priority, localhost for dev
