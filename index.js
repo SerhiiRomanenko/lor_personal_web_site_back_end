@@ -10,17 +10,19 @@ const { initDB, getAllAppointments, createAppointment, updateAppointment, delete
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
 
-// Allow requests from Vercel frontend and localhost
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    /https:\/\/.*\.vercel\.app$/,
-    /https:\/\/.*\.vercel\.domain$/,
-    /https:\/\/.*\.vercel\.dev$/,
-  ],
-}));
+// Build allowed CORS origins — env var takes priority, localhost for dev
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  /https:\/\/.*\.vercel\.app$/,
+  /https:\/\/.*\.vercel\.domain$/,
+  /https:\/\/.*\.vercel\.dev$/,
+];
+if (FRONTEND_ORIGIN) allowedOrigins.push(FRONTEND_ORIGIN);
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '1mb' }));
 
@@ -164,8 +166,8 @@ app.get('/', (req, res) => {
 initDB().then(async () => {
   await seedDefaults();
   app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`Admin panel: http://localhost:${PORT}/admin`);
+    console.log(`Server running at http://0.0.0.0:${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }).catch(err => {
   console.error('Failed to init database:', err);
