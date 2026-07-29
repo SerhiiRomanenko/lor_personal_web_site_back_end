@@ -158,6 +158,11 @@ app.delete('/api/location-schedules/:id', requireAuth, async (req, res) => { awa
 app.get('/api/contacts', async (req, res) => { res.json(await getContactsData()); });
 app.post('/api/contacts/bulk', requireAuth, async (req, res) => { await bulkUpdateContacts(req.body); res.json({ ok: true }); });
 
+// Health check — for UptimeRobot to keep Render awake
+app.get('/health', (req, res) => {
+  res.json({ ok: true, uptime: process.uptime() });
+});
+
 // Root redirect — only locally (Vercel hosts frontend in production)
 if (process.env.NODE_ENV !== 'production') {
   app.get('/', (req, res) => {
