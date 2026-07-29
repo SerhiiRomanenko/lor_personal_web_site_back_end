@@ -16,6 +16,7 @@ const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://lor-bucha.vercel.app',
   /https:\/\/.*\.vercel\.app$/,
   /https:\/\/.*\.vercel\.domain$/,
   /https:\/\/.*\.vercel\.dev$/,
