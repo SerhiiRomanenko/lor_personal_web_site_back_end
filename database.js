@@ -4,9 +4,19 @@ mongoose.set('toJSON', { virtuals: true, versionKey: false });
 const MONGODB_URI = process.env.MONGODB_URI;
 
 async function initDB() {
-  await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 20000,
+    socketTimeoutMS: 45000,
+  });
   console.log('MongoDB connected');
 }
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('MongoDB disconnected, reconnecting...');
+});
+mongoose.connection.on('error', err => {
+  console.error('MongoDB error:', err.message);
+});
 
 // ---- Schemas ----
 const appointmentSchema = new mongoose.Schema(

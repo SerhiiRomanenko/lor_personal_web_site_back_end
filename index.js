@@ -156,7 +156,15 @@ app.delete('/api/location-schedules/:id', requireAuth, async (req, res) => { awa
 
 // --- Contacts Combined ---
 app.get('/api/contacts', async (req, res) => { res.json(await getContactsData()); });
-app.post('/api/contacts/bulk', requireAuth, async (req, res) => { await bulkUpdateContacts(req.body); res.json({ ok: true }); });
+app.post('/api/contacts/bulk', requireAuth, async (req, res) => {
+  try {
+    await bulkUpdateContacts(req.body);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('bulkUpdateContacts error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Health check — for UptimeRobot to keep Render awake
 app.get('/health', (req, res) => {
