@@ -37,18 +37,18 @@ function requireAuth(req, res, next) {
   res.status(401).json({ error: 'Невірний пароль' });
 }
 
-// Serve client static files
-app.use(express.static(path.join(__dirname, '..', 'client')));
+// Serve client static files — only locally (Vercel hosts frontend in production)
+if (process.env.NODE_ENV !== 'production') {
+  app.use(express.static(path.join(__dirname, '..', 'client')));
 
-// Serve admin panel
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'admin.html'));
-});
+  app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'admin.html'));
+  });
 
-// Serve login page
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'login.html'));
-});
+  app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'login.html'));
+  });
+}
 
 // API routes
 app.post('/api/appointments', async (req, res) => {
@@ -158,10 +158,12 @@ app.delete('/api/location-schedules/:id', requireAuth, async (req, res) => { awa
 app.get('/api/contacts', async (req, res) => { res.json(await getContactsData()); });
 app.post('/api/contacts/bulk', requireAuth, async (req, res) => { await bulkUpdateContacts(req.body); res.json({ ok: true }); });
 
-// Root redirect
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
-});
+// Root redirect — only locally (Vercel hosts frontend in production)
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
+  });
+}
 
 initDB().then(async () => {
   await seedDefaults();
